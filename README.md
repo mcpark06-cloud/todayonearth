@@ -1,4 +1,3 @@
-[index.html.html](https://github.com/user-attachments/files/33283272/index.html.html)
 <!DOCTYPE html>
 <html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="커피 섭취 습관과 장 건강 관련 반응 자가 점검"><title>커피 & 장 마이크로바이옴 건강 척도 (CGHAS)</title>
 <style>
