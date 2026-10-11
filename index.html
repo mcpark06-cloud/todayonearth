@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGHAS · 커피 & 장 마이크로바이옴 건강 척도</title>
+    <style>
+        :root {
+            --primary: #2d5a27;
+            --primary-light: #f0f7f0;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 15px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 30px 20px;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            word-break: keep-all;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            word-break: keep-all;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+        }
+
+        .question-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .question-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            word-break: keep-all;
+        }
+
+        .options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-option {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #fff;
+            color: var(--text-sub);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-option.selected-yes {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-option.selected-no {
+            background-color: #64748b;
+            color: white;
+            border-color: #64748b;
+        }
+
+        .action-area {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            max-width: 400px;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(45, 90, 39, 0.3);
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #23471e;
+        }
+
+        .result-card {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .result-score {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .guide-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .guide-box ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 40px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>☕ CGHAS · 커피 & 장 마이크로바이옴 건강 척도</h1>
+        <p><strong>Coffee & Gut Health Assessment Scale</strong></p>
+        <p style="margin-top: 8px; font-size: 0.85rem;">지난 4주 동안의 평균적인 커피 소비 패턴과 신체 반응을 바탕으로 체크해 주세요.</p>
+    </header>
+
+    <form id="assessmentForm">
+        <!-- 영역 1 -->
+        <div class="section-title">영역 1. 섭취량 및 카페인 대사 적응도</div>
+        <div class="question-card">
+            <div class="question-text">1.1 하루 총 커피 섭취량이 에스프레소 기준 1~3잔(카페인 400mg 이하)을 유지하고 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q1_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q1_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">1.2 하루 5잔 이상을 마시지 않으면 집중력이 떨어지거나 심한 두통/피로감을 느끼십니까? (역채점)</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q1_2', 0, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q1_2', 1, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">1.3 디카페인 커피나 카페인 함량이 적은 드립 커피를 혼용하여 카페인 의존도를 조절하고 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q1_3', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q1_3', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <!-- 영역 2 -->
+        <div class="section-title">영역 2. 섭취 타이밍 및 위장관 생리학</div>
+        <div class="question-card">
+            <div class="question-text">2.1 아침에 기상 후 최소 1시간 이상 지나 코르티솔 호르몬 수치가 안정된 뒤 첫 커피를 마십니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q2_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q2_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">2.2 공복 상태가 아닌, 간단한 식사나 단백질/유익균 섭취 후에 커피를 마십니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q2_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q2_2', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">2.3 커피 복용 후 위산 역류, 가슴 속쓰림, 흉통, 상복부 팽만감을 겪지 않습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q2_3', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q2_3', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">2.4 취침 최소 6~8시간 전에는 커피(카페인 음료 포함) 섭취를 완전히 중단합니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q2_4', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q2_4', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <!-- 영역 3 -->
+        <div class="section-title">영역 3. 원두 품질 및 폴리페놀·미생물 이점</div>
+        <div class="question-card">
+            <div class="question-text">3.1 당분(시럽), 인공 가공유, 크림 등이 첨가되지 않은 블랙커피(원두커피)를 주로 마십니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q3_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q3_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">3.2 클로로겐산 등 항산화 폴리페놀 효능이 높은 약배전(라이트 로스팅)이나 미디엄 로스팅 원두를 즐기십니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q3_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q3_2', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">3.3 곰팡이 독소(마이코톡신) 위험이 적은 신선한 고품질 생두/갓 볶은 원두를 사용한 커피를 마십니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q3_3', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q3_3', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <!-- 영역 4 -->
+        <div class="section-title">영역 4. 장내 미생물군 및 배변 기능 신호</div>
+        <div class="question-card">
+            <div class="question-text">4.1 커피를 마신 후 잔뇨감이나 긴박뇨/긴박변 없이 편안하고 정기적인 배변 활동을 유지합니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q4_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q4_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">4.2 커피 섭취 후 잦은 물설사, 복통, 강한 장 경련이 발생하지 않습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q4_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q4_2', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">4.3 과민성 대장 증후군(IBS), 염증성 장질환(크론병/궤양성 대장염), 잦은 복부 팽만감이 없습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q4_3', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q4_3', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <!-- 영역 5 -->
+        <div class="section-title">영역 5. 디카페인 및 개인별 민감도</div>
+        <div class="question-card">
+            <div class="question-text">5.1 디카페인 커피 역시 폴리페놀과 멜라노이딘 성분이 있어 장내 유익균(Lawsonibacter 등)에 영양을 공급한다는 점을 인지하고 활용합니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q5_1', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q5_1', 0, this)">아니다</button>
+            </div>
+        </div>
+        <div class="question-card">
+            <div class="question-text">5.2 컨디션이 떨어지거나 장이 예민한 날에는 커피 대신 따뜻한 물이나 디카페인으로 대체할 수 있는 조절 능력이 있습니까?</div>
+            <div class="options">
+                <button type="button" class="btn-option" onclick="selectOption('q5_2', 1, this)">그렇다</button>
+                <button type="button" class="btn-option" onclick="selectOption('q5_2', 0, this)">아니다</button>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <button type="button" class="btn-submit" onclick="calculateResult()">종합 결과 확인하기</button>
+        </div>
+    </form>
+
+    <!-- 결과 영역 -->
+    <div id="resultCard" class="result-card">
+        <div style="text-align: center;">
+            <span id="resultBadge" class="result-badge">결과 평가 중</span>
+            <div id="resultScore" class="result-score">0 / 15점</div>
+        </div>
+        <div id="resultGuide" class="guide-box">
+            <!-- 가이드 텍스트가 동적으로 삽입됩니다. -->
+        </div>
+    </div>
+
+    <div class="footer-text">
+        © TODAYONEARTH · 본 진단은 개인 임상 참고용이며 전문의의 의학적 진단을 대체할 수 없습니다.
+    </div>
+</div>
+
+<script>
+    const answers = {};
+
+    function selectOption(questionId, val, btn) {
+        answers[questionId] = val;
+        
+        const parent = btn.parentElement;
+        const buttons = parent.querySelectorAll('.btn-option');
+        buttons.forEach(b => {
+            b.classList.remove('selected-yes', 'selected-no');
+        });
+
+        if ((val === 1 && questionId !== 'q1_2') || (val === 0 && questionId === 'q1_2')) {
+            btn.classList.add('selected-yes');
+        } else {
+            btn.classList.add('selected-no');
+        }
+    }
+
+    function calculateResult() {
+        const totalQuestions = 15;
+        if (Object.keys(answers).length < totalQuestions) {
+            alert("모든 문항에 답변해 주세요. (남은 문항: " + (totalQuestions - Object.keys(answers).length) + "개)");
+            return;
+        }
+
+        let score = 0;
+        for (let key in answers) {
+            score += answers[key];
+        }
+
+        const resultCard = document.getElementById('resultCard');
+        const resultScore = document.getElementById('resultScore');
+        const resultBadge = document.getElementById('resultBadge');
+        const resultGuide = document.getElementById('resultGuide');
+
+        resultCard.style.display = 'block';
+        resultScore.innerText = score + " / 15점";
+
+        if (score <= 6) {
+            resultBadge.style.backgroundColor = 'var(--danger)';
+            resultBadge.innerText = '🔴 0 ~ 6점: [주의] 장 마이크로바이옴 및 위장관 과부하 상태';
+            resultGuide.innerHTML = `
+                <strong>🩺 전문가 진단 분석 & 가이드</strong>
+                <p style="margin-top:5px;">현재 커피 섭취 패턴이 장내 미생물 생태계의 불균형(Dysbiosis)을 유발하거나, 위산 역류 및 장 점막 자극을 심화시키고 있을 가능성이 매우 높습니다.</p>
+                <ul>
+                    <li>즉시 공복 커피를 중단하고 식후 1시간 뒤로 타이머를 조정하세요.</li>
+                    <li>2주간 디카페인 음료나 약배전 드립 커피로 전면 교체하여 카페인 민감도를 낮추세요.</li>
+                    <li>복통이나 설사가 지속된다면 과민성 대장 증후군(IBS) 가능성이 있으므로 전문의 진료를 권장합니다.</li>
+                </ul>
+            `;
+        } else if (score <= 11) {
+            resultBadge.style.backgroundColor = 'var(--warning)';
+            resultBadge.innerText = '🟡 7 ~ 11점: [경고] 부분적 습관 개선이 필요한 경계 단계';
+            resultGuide.innerHTML = `
+                <strong>🩺 전문가 진단 분석 & 가이드</strong>
+                <p style="margin-top:5px;">커피의 긍정적인 면(폴리페놀 섭취)을 누리고 있으나, 시간대나 원두 종류, 섭취량 조절 미흡으로 장 기능에 미세한 부담을 주고 있습니다.</p>
+                <ul>
+                    <li>하루 섭취량을 에스프레소 기준 최대 2~3잔으로 제한하세요.</li>
+                    <li>시럽이나 유제품이 든 가공 커피 대신 클린한 블랙커피나 스페셜티 원두로 전환하여 장내 유익균(비피도박테리아)의 번식을 도우세요.</li>
+                </ul>
+            `;
+        } else {
+            resultBadge.style.backgroundColor = 'var(--success)';
+            resultBadge.innerText = '🟢 12 ~ 15점: [최적] 장내 생태계와 조화를 이루는 명품 커피 습관';
+            resultGuide.innerHTML = `
+                <strong>🩺 전문가 진단 분석 & 가이드</strong>
+                <p style="margin-top:5px;">커피의 생리학적 이점을 완벽히 활용하고 계십니다. 카페인의 자극성은 최소화하고, 폴리페놀과 멜라노이딘을 통해 장내 유익균(Lawsonibacter asaccharolyticus)을 풍부하게 살리는 최상의 루틴입니다.</p>
+                <ul>
+                    <li>현재의 건강한 루틴을 그대로 유지하세요!</li>
+                    <li>컨디션에 따라 디카페인을 적절히 스위칭하는 유연성만 유지해 주시면 됩니다.</li>
+                </ul>
+            `;
+        }
+
+        resultCard.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
